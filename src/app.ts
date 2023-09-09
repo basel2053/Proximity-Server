@@ -1,19 +1,19 @@
-import express from 'express'
-import 'express-async-errors'
-import dotenv from 'dotenv'
+import express from 'express';
+import 'express-async-errors';
+import dotenv from 'dotenv';
 
-import ApplicationConfig from './config/app-conf'
-import connectDB from './config/db-conf'
-import errorHandler from './middlewares/errorHandler'
+import ApplicationConfig from './config/app-conf';
+import connectDB from './config/db-conf';
+import errorHandler from './middlewares/error-handler';
 
-dotenv.config()
+dotenv.config();
 // import routes from './routes';
 
-export const app = express()
+export const app = express();
 
-connectDB()
+connectDB();
 
-ApplicationConfig.init(app)
+ApplicationConfig.init(app);
 
 // app.use(routes);
-app.use(errorHandler)
+app.use(errorHandler);
