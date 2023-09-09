@@ -13,3 +13,5 @@ npm-debug.log*
 /.nyc_output
 
 .env
+
+providers

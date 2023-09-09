@@ -11,10 +11,10 @@ interface ILocation {
 
 interface IUser {
   email: string;
-  password: string;
   name: string;
-  location: ILocation;
-  role: 'customer' | 'owner';
+  password: string;
+  location?: ILocation;
+  role?: 'customer' | 'owner';
 }
 
 interface IUserDoc extends Document {
@@ -28,6 +28,7 @@ interface IUserModel extends Model<IUserDoc> {
   build(user: IUser): Promise<IUserDoc>;
   getUser(id: string): Promise<IUserDoc | never>;
   isDuplicateEmail(email: string): Promise<void | never>;
+  findOrCreate: (cond: object, newUser: IUser) => Promise<IUserDoc>;
 }
 
 const userSchema = new Schema<IUser>(
@@ -105,6 +106,16 @@ userSchema.statics = {
       throw new BadRequestError(`Email: ${email} is already used`);
     }
   },
+  async findOrCreate(cond, newUser: IUser) {
+    const user = await this.findOne(cond);
+    if (user) {
+      return user;
+    }
+    const createdUser = await User.build(newUser);
+    return createdUser;
+  },
 };
 
 const User = model<IUserDoc, IUserModel>('User', userSchema);
+
+export default User;

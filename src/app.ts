@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import ApplicationConfig from './config/app-conf';
 import connectDB from './config/db-conf';
 import errorHandler from './middlewares/error-handler';
+import routes from './routes';
 
 dotenv.config();
 // import routes from './routes';
@@ -15,5 +16,5 @@ connectDB();
 
 ApplicationConfig.init(app);
 
-// app.use(routes);
+app.use(routes);
 app.use(errorHandler);
