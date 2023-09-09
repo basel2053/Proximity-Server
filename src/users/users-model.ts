@@ -1,6 +1,9 @@
 import { Schema, Document, Model, model } from 'mongoose';
 import argon2 from 'argon2';
 
+import { NotFoundError } from '../errors/notFound-error';
+import { BadRequestError } from '../errors/badRequest-error';
+
 interface ILocation {
   lat: number;
   lng: number;
@@ -85,25 +88,23 @@ userSchema.statics = {
     return user;
   },
 
-  // async getUser(id: string) {
-  //   const user = await this.findById(id);
+  async getUser(id: string) {
+    const user = await this.findById(id);
 
-  //   if (!user) {
-  //     Logger.warn(`Couldn't get request User: ${id}}`);
-  //     throw new CustomError("User doesn't exist", 404);
-  //   }
+    if (!user) {
+      throw new NotFoundError("User doesn't exist");
+    }
 
-  //   return user;
-  // },
+    return user;
+  },
 
-  // async isDuplicateEmail(email: string) {
-  //   const user = await this.findOne({ email });
+  async isDuplicateEmail(email: string) {
+    const user = await this.findOne({ email });
 
-  //   if (user) {
-  // Logger.warn(`Duplicate email: ${email} was detected`);
-  //     throw new CustomError(`Email: ${email} is already used`, 400);
-  //   }
-  // },
+    if (user) {
+      throw new BadRequestError(`Email: ${email} is already used`);
+    }
+  },
 };
 
 const User = model<IUserDoc, IUserModel>('User', userSchema);
