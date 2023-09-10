@@ -3,11 +3,7 @@ import FedCred from '../federatedCredentials-model';
 import User from '../../users/users-model';
 
 const verifyFunction = function (accessToken: string, refreshToken: string, profile: Profile, cb: VerifyCallback) {
-  console.log(profile);
-  console.log('------------------------');
-  console.log(accessToken);
-  console.log('------------------------');
-  console.log(refreshToken);
+  console.log({ accessToken });
 
   FedCred.findOne({ provider: profile.provider, profileId: profile.id })
     .then(async (credentials) => {
@@ -16,11 +12,11 @@ const verifyFunction = function (accessToken: string, refreshToken: string, prof
         const { provider, id } = profile;
         const fedCredentials = { profileId: id, provider, userId: user.id };
         await FedCred.build(fedCredentials);
-        return cb(null, user);
+        return cb(null, user, accessToken);
       }
       const user = await User.findById(credentials.userId);
       if (user) {
-        return cb(null, user);
+        return cb(null, user, accessToken);
       } else {
         return cb(null, false);
       }

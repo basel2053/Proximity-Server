@@ -4,16 +4,21 @@ import passport from 'passport';
 const router = Router();
 
 // HERE  google
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+router.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    session: false,
+  }),
+);
 
 router.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login', session: false }),
   function (req, res) {
     console.log('im getting here google');
-
-    // Successful authentication, redirect home.
-    res.redirect('/');
+    // console.log(req.user);
+    res.send({ accessToken: req.authInfo });
   },
 );
 
@@ -21,6 +26,8 @@ router.get(
 
 router.get(
   '/auth/facebook',
+  // @ts-ignore: went wrong
+
   passport.authenticate('facebook', {
     scope: ['email', 'public_profile'],
     session: false,
@@ -31,9 +38,7 @@ router.get(
   passport.authenticate('facebook', { failureRedirect: '/login', session: false }),
   function (req, res) {
     console.log('im getting here fb');
-
-    // Successful authentication, redirect home.
-    res.redirect('/');
+    res.send({ accessToken: req.authInfo });
   },
 );
 
@@ -41,6 +46,7 @@ router.get(
 
 router.get(
   '/auth/github',
+  // @ts-ignore: went wrong
   passport.authenticate('github', {
     scope: ['user:email'],
     session: false,
@@ -51,9 +57,7 @@ router.get(
   passport.authenticate('github', { failureRedirect: '/login', session: false }),
   function (req, res) {
     console.log('im getting here github');
-
-    // Successful authentication, redirect home.
-    res.redirect('/');
+    res.send({ accessToken: req.authInfo });
   },
 );
 
