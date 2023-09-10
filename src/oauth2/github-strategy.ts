@@ -7,8 +7,6 @@ import { Strategy as GithubStrategy, Profile } from 'passport-github2';
 dotenv.config();
 
 const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, GITHUB_CB } = process.env;
-console.log(GITHUB_CLIENT_ID);
-console.log(GITHUB_CLIENT_SECRET);
 
 const githubStrategy = passport.use(
   new GithubStrategy(
