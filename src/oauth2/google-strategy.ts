@@ -1,16 +1,19 @@
 import passport from 'passport';
+import dotenv from 'dotenv';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 import User from '../users/users-model';
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
+dotenv.config();
 
-passport.use(
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CB } = process.env;
+
+const googleStrategy = passport.use(
   new GoogleStrategy(
     {
       clientID: String(GOOGLE_CLIENT_ID),
       clientSecret: String(GOOGLE_CLIENT_SECRET),
-      callbackURL: 'http://localhost:3000/auth/google/callback',
+      callbackURL: String(GOOGLE_CB),
     },
     function (accessToken, refreshToken, profile, cb) {
       console.log(profile);
@@ -18,14 +21,18 @@ passport.use(
       console.log(accessToken);
       console.log('------------------------');
       console.log(refreshToken);
-
-      User.findOrCreate({ googleId: profile.id }, { email: 'test@test.com', name: 'test', password: '000000' })
+      const { email, given_name } = profile._json;
+      User.findOrCreate({ email }, { email: String(email), name: String(given_name), password: '000000' })
         .then((user) => {
           return cb(null, user);
         })
         .catch((err) => {
+          console.log(err);
+
           return cb(err);
         });
     },
   ),
 );
+
+export default googleStrategy;
