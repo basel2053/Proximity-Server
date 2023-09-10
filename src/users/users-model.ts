@@ -10,9 +10,9 @@ interface ILocation {
 }
 
 interface IUser {
-  email: string;
+  email?: string;
   name: string;
-  password: string;
+  password?: string;
   location?: ILocation;
   role?: 'customer' | 'owner';
 }
@@ -36,12 +36,10 @@ const userSchema = new Schema<IUser>(
     email: {
       type: String,
       unique: true,
-      required: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: true,
       minlength: 6,
       maxlength: 16,
     },
@@ -61,7 +59,7 @@ const userSchema = new Schema<IUser>(
 
 userSchema.pre('save', async function (done) {
   if (this.isModified('password')) {
-    const hashedPassword = await argon2.hash(this.get('password'));
+    const hashedPassword = await argon2.hash(String(this.get('password')));
     this.set('password', hashedPassword);
   }
   done();
