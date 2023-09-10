@@ -2,7 +2,7 @@ import passport from 'passport';
 import dotenv from 'dotenv';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 
-// import User from '../users/users-model';
+import User from '../../users/users-model';
 
 dotenv.config();
 
@@ -15,27 +15,23 @@ const facebookStrategy = passport.use(
       clientSecret: String(FACEBOOK_APP_SECRET),
       callbackURL: String(FACEBOOK_CB),
     },
-    function (accessToken, refreshToken, profile, cb) {
+    function verify(accessToken, refreshToken, profile, cb) {
       console.log(profile);
       console.log('------------------------');
       console.log(accessToken);
       console.log('------------------------');
       console.log(refreshToken);
-      console.log('------------------------');
-      console.log(profile);
-      console.log('------------------------');
-      console.log(cb);
 
-      // const { email, given_name } = profile._json;
-      // User.findOrCreate({ email }, { email: String(email), name: String(given_name), password: '000000' })
-      //   .then((user) => {
-      //     return cb(null, user);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
+      const { email, name } = profile._json;
+      User.findOrCreate({ email }, { email, name, password: '000000' })
+        .then((user) => {
+          return cb(null, user);
+        })
+        .catch((err) => {
+          console.log(err);
 
-      //     return cb(err);
-      //   });
+          return cb(err);
+        });
     },
   ),
 );

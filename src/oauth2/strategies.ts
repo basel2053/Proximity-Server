@@ -1,6 +1,6 @@
-import facebookStrategy from './facebook-strategy';
-import githubStrategy from './github-strategy';
-import googleStrategy from './google-strategy';
+import facebookStrategy from './strategies/facebook-strategy';
+import githubStrategy from './strategies/github-strategy';
+import googleStrategy from './strategies/google-strategy';
 
 const intializeStrategies = () => {
   googleStrategy;
