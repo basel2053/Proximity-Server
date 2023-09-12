@@ -12,11 +12,11 @@ const verifyFunction = function (accessToken: string, refreshToken: string, prof
         const { provider, id } = profile;
         const fedCredentials = { profileId: id, provider, userId: user.id };
         await FedCred.build(fedCredentials);
-        return cb(null, user, accessToken);
+        return cb(null, user);
       }
       const user = await User.findById(credentials.userId);
       if (user) {
-        return cb(null, user, accessToken);
+        return cb(null, user);
       } else {
         return cb(null, false);
       }

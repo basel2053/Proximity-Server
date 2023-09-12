@@ -26,7 +26,6 @@ router.get(
 
 router.get(
   '/auth/facebook',
-  // @ts-ignore: went wrong
 
   passport.authenticate('facebook', {
     scope: ['email', 'public_profile'],
@@ -46,7 +45,6 @@ router.get(
 
 router.get(
   '/auth/github',
-  // @ts-ignore: went wrong
   passport.authenticate('github', {
     scope: ['user:email'],
     session: false,

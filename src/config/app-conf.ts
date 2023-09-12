@@ -6,7 +6,7 @@ import hpp from 'hpp';
 // import session from 'express-session';
 // import MongoStore from 'connect-mongo';
 
-import intializeStrategies from '../oauth2/strategies';
+import intializeStrategies from '../auth/strategies';
 // import swaggerUI from 'swagger-ui-express'
 
 // import swaggerDocument from '../../swagger.json';
@@ -20,6 +20,7 @@ export default class ApplicationConfig {
     app.use(morgan('dev'));
     app.use(helmet());
     app.use(hpp());
+    app.use(express.static('public'));
     // app.use(
     //   session({
     //     secret: String(SESSION_SECRET),
