@@ -1,62 +1,37 @@
 import { Router } from 'express';
+import { V3 as paseto } from 'paseto';
 import passport from 'passport';
 
 const router = Router();
 
-// HERE  google
-router.get(
-  '/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
+router.get('/auth/:provider', (req, res, next) => {
+  console.log(`my custom provider link ${req.params.provider}`);
+
+  passport.authenticate(req.params.provider, {
     session: false,
-  }),
-);
-
-router.get(
-  '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login', session: false }),
-  function (req, res) {
-    console.log('im getting here google');
-    // console.log(req.user);
-    res.send({ accessToken: req.authInfo });
-  },
-);
-
-// HERE  facebook
-
-router.get(
-  '/auth/facebook',
-
-  passport.authenticate('facebook', {
-    scope: ['email', 'public_profile'],
-    session: false,
-  }),
-);
-router.get(
-  '/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login', session: false }),
-  function (req, res) {
-    console.log('im getting here fb');
-    res.send({ accessToken: req.authInfo });
-  },
-);
+  })(req, res, next);
+});
 
 // HERE  github
 
 router.get(
-  '/auth/github',
-  passport.authenticate('github', {
-    scope: ['user:email'],
-    session: false,
-  }),
-);
-router.get(
-  '/auth/github/callback',
-  passport.authenticate('github', { failureRedirect: '/login', session: false }),
-  function (req, res) {
-    console.log('im getting here github');
-    res.send({ accessToken: req.authInfo });
+  '/auth/:provider/callback',
+  (req, res, next) => {
+    passport.authenticate(req.params.provider, { failureRedirect: '/', session: false })(req, res, next);
+  },
+  (req, res) => {
+    console.log(req.user);
+    console.log(req.authInfo);
+    res.status(302).redirect('/');
   },
 );
 
+router.get('/test', async (req, res) => {
+  const key = await paseto.generateKey('public');
+  const secret = paseto.keyObjectToBytes(key).toString('hex');
+  const token = await paseto.sign({ name: 'bassel' }, Buffer.from(secret, 'hex'));
+  console.log(token);
+
+  res.send('helo');
+});
 export default router;
