@@ -48,6 +48,21 @@ router.post('/signup', validateRequest(signupSchema), async (req, res) => {
   });
 });
 
+router.post('/logout', function (req, res) {
+  // req.logout(function (err) {
+  //   if (err) {
+  //     return new BadRequestError('error happend during logging user out');
+  //   }
+  //   res.redirect('/');
+  // });
+
+  // NOTE   req.logout doesn't remove session or cookie.
+  req.session.destroy((_err) => {
+    res.clearCookie('connect.sid');
+    res.redirect('/');
+  });
+});
+
 // HERE  paseto
 
 router.get('/test', async (req, res) => {

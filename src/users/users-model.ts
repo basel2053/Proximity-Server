@@ -53,6 +53,7 @@ const userSchema = new Schema<IUser>(
     toJSON: {
       transform(doc, ret) {
         delete ret.password;
+        delete ret.__v;
       },
     },
   },

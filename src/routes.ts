@@ -10,7 +10,9 @@ const router = Router();
 router.use(oauth2Router);
 
 router.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', {
+    isLoggedIn: req.isAuthenticated(),
+  });
 });
 
 // HERE Temporary login/signup pages

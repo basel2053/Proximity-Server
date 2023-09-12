@@ -29,6 +29,11 @@
     </style>
   </head>
   <body>
+    <%if(isLoggedIn) {%>
+    <form action="/logout" method="POST">
+      <button type="submit">Logout</button>
+    </form>
+    <%}%>
     <h2>Hello There.</h2>
     <p>To see all available endpoints: </p>
     <a href="/api-docs">Here</a>
