@@ -5,7 +5,7 @@ import passport from 'passport';
 import User from '../users/users-model';
 import { BadRequestError } from '../errors/badRequest-error';
 import { validateRequest } from '../middlewares/validate-request';
-import { signupSchema } from '../users/user-validation';
+import { loginSchema, signupSchema } from '../users/user-validation';
 
 const router = Router();
 
@@ -31,9 +31,14 @@ router.get(
 
 // HERE  Local
 
-router.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function (req, res) {
-  res.redirect('/');
-});
+router.post(
+  '/login',
+  validateRequest(loginSchema),
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function (req, res) {
+    res.redirect('/');
+  },
+);
 
 router.post('/signup', validateRequest(signupSchema), async (req, res) => {
   const { email, password } = req.body;
@@ -49,13 +54,6 @@ router.post('/signup', validateRequest(signupSchema), async (req, res) => {
 });
 
 router.post('/logout', function (req, res) {
-  // req.logout(function (err) {
-  //   if (err) {
-  //     return new BadRequestError('error happend during logging user out');
-  //   }
-  //   res.redirect('/');
-  // });
-
   // NOTE   req.logout doesn't remove session or cookie.
   req.session.destroy((_err) => {
     res.clearCookie('connect.sid');

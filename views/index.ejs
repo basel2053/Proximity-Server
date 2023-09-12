@@ -29,6 +29,7 @@
     </style>
   </head>
   <body>
+    <button id="btn">Get Nearby</button>
     <%if(isLoggedIn) {%>
     <form action="/logout" method="POST">
       <button type="submit">Logout</button>
@@ -41,5 +42,7 @@
     <a href="/auth/github" class="fa fa-github social-icon"></a>
     <a href="/auth/facebook" class="fa fa-facebook social-icon"></a>
     <a href="/auth/google" class="fa fa-google social-icon"></a>
+
+    <script src="/js/index.js"></script>
   </body>
 </html>

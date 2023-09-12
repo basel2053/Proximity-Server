@@ -3,6 +3,7 @@ import { Router } from 'express';
 
 import { NotFoundError } from './errors/notFound-error';
 import oauth2Router from './auth/auth-route';
+import Company from './companies/company-model';
 
 const router = Router();
 
@@ -23,6 +24,26 @@ router.get('/login', (_req, res) => {
 
 router.get('/signup', (_req, res) => {
   res.render('signup');
+});
+
+router.get('/companies', async (req, res) => {
+  const { long, lat } = req.query;
+  // NOTE  HERE  getting companies within 260KM
+  const maxDistanceInKm = 260;
+  const companies = await Company.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [long, lat],
+        },
+        $maxDistance: maxDistanceInKm * 1000,
+      },
+    },
+  });
+  console.log(companies);
+
+  res.send(companies);
 });
 
 router.all('*', (_req, _res) => {
