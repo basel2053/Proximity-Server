@@ -8,7 +8,6 @@ import errorHandler from './middlewares/error-handler';
 import routes from './routes';
 
 dotenv.config();
-// import routes from './routes';
 
 export const app = express();
 
